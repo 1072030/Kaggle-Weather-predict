@@ -36,20 +36,20 @@ sc = StandardScaler()
 X=sc.fit_transform(X)
 #--------------------------------
 [X_train, X_test, Y_train, Y_test] = train_test_split(X,Y,test_size=806,random_state=0)
-classifier = DecisionTreeClassifier(criterion='gini',min_samples_split=2,min_samples_leaf=1,min_weight_fraction_leaf=0.0)
+classifier = DecisionTreeClassifier(criterion='entropy',min_samples_split=2,min_samples_leaf=1,min_weight_fraction_leaf=0.5)
 classifier.fit(X_train,Y_train)
 print(classifier.score(X_train,Y_train))
 Y_pred = classifier.predict(X_test)
 
 joblib.dump(classifier, 'model.pkl')
-submission = pd.read_csv('ex_submit_copy.csv')
-submission.to_csv('ex_submit_copy.csv',index=False)
+# submission = pd.read_csv('ex_submit_copy.csv')
+# submission.to_csv('ex_submit_copy.csv',index=False)
 print("accuracy Y_test Y_pred")
 print(accuracy_score(Y_test,Y_pred))
 #--------------------------------------------
 df_test = pd.read_csv('test.csv')
 df_test = df_test.drop('Attribute1',axis=1)
-df_answer = pd.read_csv('ex_submit_copy.csv',usecols=['ans'])
+df_answer = pd.read_csv('ex_submit.csv',usecols=['ans'])
 # print(df_answer.values.squeeze())
 Z = imputer.fit_transform(df_test.values)
 # ans = imputer.fit_transform(df_answer.values)
@@ -68,7 +68,9 @@ Z_pred = Z_pred.reshape(-1,1)
 # print(ans)
 # print(Z_pred)
 
-
+submission = pd.read_csv('ex_submit.csv')
+submission["ans"] = Z_pred
+submission.to_csv('ex_submit_copy.csv',index=False)
 
 # Z_model = lable_Y.inverse_transform(Z_model)
 # ans = lable_Y.inverse_transform(ans)
