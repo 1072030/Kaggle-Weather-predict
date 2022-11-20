@@ -53,14 +53,22 @@ X[:,8] = lable_1.fit_transform(X[:,8])
 X[:,-1] = lable_1.fit_transform(X[:,-1])
 Y = lable_1.fit_transform(Y)
 #---------------------------------資料前處理
-sc = StandardScaler()
-X=sc.fit_transform(X)
+# sc = StandardScaler()
+# X=sc.fit_transform(X)
 #--------------------------------
-[X_train, X_test, Y_train, Y_test] = train_test_split(X,Y,test_size=0.2,random_state=50)
-classifier = DecisionTreeClassifier(criterion='gini',min_samples_split=3,min_samples_leaf=5,splitter="random",random_state=50)
-# criterion 選擇 gini 因為我們數據較大
 
-# classifier = RandomForestClassifier(n_estimators=150,criterion='gini',min_samples_split=3,min_samples_leaf=5,random_state=50,oob_score=True)
+[X_train, X_test, Y_train, Y_test] = train_test_split(X,Y,test_size=0.2,random_state=60,shuffle=True,)
+# from sklearn.svm import SVC
+# classifier = SVC(kernel='poly', degree=1)
+from sklearn import neighbors
+classifier = neighbors.KNeighborsClassifier(n_neighbors=5)
+# classifier = DecisionTreeClassifier(splitter="random",random_state=60)
+# criterion='gini',min_samples_split=3,min_samples_leaf=6,splitter="random",random_state=50
+# criterion 選擇 gini 因為我們數據較大
+from sklearn.neural_network import MLPClassifier
+classifier = MLPClassifier(activation='relu',solver='adam',alpha=0.0001)
+# classifier = RandomForestClassifier(n_estimators=150,criterion='gini',min_samples_split=3,min_samples_leaf=5,random_state=60,oob_score=True) 
+# n_estimators=150,criterion='gini',min_samples_split=4,min_samples_leaf=5,random_state=150,oob_score=True
 # classifier = GradientBoostingClassifier(n_estimators=100,random_state=50)
 # classifier = LogisticRegression()
 classifier.fit(X_train,Y_train)
@@ -103,7 +111,7 @@ Z[:,6] = lable_4.fit_transform(Z[:,6])
 Z[:,8] = lable_4.fit_transform(Z[:,8])
 Z[:,-1] = lable_4.fit_transform(Z[:,-1])
 
-Z = sc.fit_transform(Z)
+# Z = sc.fit_transform(Z)
 Z_model = joblib.load('model.pkl')
 Z_pred = Z_model.predict(Z)
 Z_pred = Z_pred.reshape(-1,1)
@@ -115,7 +123,7 @@ Z_pred = Z_pred.reshape(-1,1)
 
 submission = pd.read_csv('ex_submit.csv')
 submission["ans"] = Z_pred
-submission.to_csv('ex_submit_copy.csv',index=False)
+submission.to_csv('ex_submit_result.csv',index=False)
 
 # Z_model = lable_Y.inverse_transform(Z_model)
 # ans = lable_Y.inverse_transform(ans)
