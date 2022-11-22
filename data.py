@@ -16,7 +16,8 @@ imputer = SimpleImputer(missing_values=np.nan,strategy='most_frequent')
 #處理空值 Strategy 使用最常出現的值(因為有文字)
 X = imputer.fit_transform(df_X.values)
 Y = imputer.fit_transform(df_Y.values)
-#-------------------------------------處理文字
+#-------------------------------------進行文字處理
+#因為有幾條項目中存在中文，用labelEncoder轉為數字
 lable_1 = LabelEncoder()
 X[:,6] = lable_1.fit_transform(X[:,6]) 
 X[:,8] = lable_1.fit_transform(X[:,8])
